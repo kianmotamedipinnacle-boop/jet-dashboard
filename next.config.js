@@ -4,9 +4,7 @@ const nextConfig = {
   output: 'standalone',
   
   // Handle SQLite properly in production
-  experimental: {
-    serverComponentsExternalPackages: ['better-sqlite3']
-  },
+  serverExternalPackages: ['better-sqlite3'],
 
   // Webpack configuration to handle SQLite binary
   webpack: (config, { isServer }) => {

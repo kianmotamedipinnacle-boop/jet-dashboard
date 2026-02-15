@@ -5,12 +5,13 @@ import { validatePassword } from '@/lib/auth';
 // PUT - Update brain card
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await request.json();
     const { title, content, tags, category, password } = body;
-    const id = parseInt(params.id);
+    const { id: idParam } = await params;
+    const id = parseInt(idParam);
 
     // Validate password for API access
     if (password && !validatePassword(password)) {
@@ -52,12 +53,13 @@ export async function PUT(
 // DELETE - Delete brain card
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const url = new URL(request.url);
     const password = url.searchParams.get('password');
-    const id = parseInt(params.id);
+    const { id: idParam } = await params;
+    const id = parseInt(idParam);
 
     // Validate password for API access
     if (password && !validatePassword(password)) {

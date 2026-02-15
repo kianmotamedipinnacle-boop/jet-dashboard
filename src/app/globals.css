@@ -3,10 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  html {
-    @apply dark;
-  }
-  
   body {
     @apply bg-gray-900 text-white;
   }
@@ -34,18 +30,19 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-800;
+  background-color: rgb(31 41 55);
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-600 rounded-full;
+  background-color: rgb(75 85 99);
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-500;
+  background-color: rgb(107 114 128);
 }
 
 /* Smooth transitions */
 * {
-  @apply transition-colors duration-200;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s;
 }
