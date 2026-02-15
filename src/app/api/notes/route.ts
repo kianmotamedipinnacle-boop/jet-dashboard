@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db, Note } from '@/lib/database';
+import { db } from '@/lib/database';
 
 export async function GET() {
   try {
-    const stmt = db.prepare('SELECT * FROM notes ORDER BY created_at DESC');
-    const notes = stmt.all() as Note[];
+    const notes = db.getAllNotes();
     return NextResponse.json(notes);
   } catch (error) {
     console.error('Notes fetch error:', error);
@@ -20,21 +19,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing content' }, { status: 400 });
     }
     
-    const now = Date.now();
-    const stmt = db.prepare(`
-      INSERT INTO notes (content, seen, created_at)
-      VALUES (?, ?, ?)
-    `);
-    
-    const result = stmt.run(content, false, now);
-    
-    const newNote = {
-      id: result.lastInsertRowid as number,
+    const newNote = db.addNote({
       content,
       seen: false,
-      created_at: now,
-      processed_at: null
-    };
+      created_at: Date.now(),
+      processed_at: undefined
+    });
     
     return NextResponse.json(newNote);
   } catch (error) {

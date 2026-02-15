@@ -1,31 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db, ActivityLog } from '@/lib/database';
+import { db } from '@/lib/database';
 
 export async function GET(request: NextRequest) {
   try {
     const url = new URL(request.url);
-    const page = parseInt(url.searchParams.get('page') || '1');
     const limit = parseInt(url.searchParams.get('limit') || '50');
-    const offset = (page - 1) * limit;
     
-    const stmt = db.prepare(`
-      SELECT * FROM activity_log 
-      ORDER BY timestamp DESC 
-      LIMIT ? OFFSET ?
-    `);
-    
-    const logs = stmt.all(limit, offset) as ActivityLog[];
-    
-    const countStmt = db.prepare('SELECT COUNT(*) as total FROM activity_log');
-    const { total } = countStmt.get() as { total: number };
+    const logs = db.getRecentActivityLogs(limit);
     
     return NextResponse.json({
       logs,
       pagination: {
-        page,
+        page: 1,
         limit,
-        total,
-        totalPages: Math.ceil(total / limit)
+        total: logs.length,
+        totalPages: 1
       }
     });
   } catch (error) {
@@ -42,21 +31,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
     
-    const now = Date.now();
-    const stmt = db.prepare(`
-      INSERT INTO activity_log (timestamp, action_type, description, metadata)
-      VALUES (?, ?, ?, ?)
-    `);
-    
-    const result = stmt.run(now, action_type, description, metadata ? JSON.stringify(metadata) : null);
-    
-    const newLog = {
-      id: result.lastInsertRowid as number,
-      timestamp: now,
+    const newLog = db.addActivityLog({
+      timestamp: Date.now(),
       action_type,
       description,
-      metadata: metadata ? JSON.stringify(metadata) : null
-    };
+      metadata: metadata ? JSON.stringify(metadata) : undefined
+    });
     
     return NextResponse.json(newLog);
   } catch (error) {

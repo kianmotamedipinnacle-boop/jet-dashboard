@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db, Doc } from '@/lib/database';
+import { db } from '@/lib/database';
 
 export async function GET() {
   try {
-    const stmt = db.prepare('SELECT * FROM docs ORDER BY updated_at DESC');
-    const docs = stmt.all() as Doc[];
+    const docs = db.getAllDocs();
     return NextResponse.json(docs);
   } catch (error) {
     console.error('Docs fetch error:', error);
@@ -21,21 +20,13 @@ export async function POST(request: NextRequest) {
     }
     
     const now = Date.now();
-    const stmt = db.prepare(`
-      INSERT INTO docs (title, content, category, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?)
-    `);
-    
-    const result = stmt.run(title, content, category || null, now, now);
-    
-    const newDoc = {
-      id: result.lastInsertRowid as number,
+    const newDoc = db.addDoc({
       title,
       content,
-      category: category || null,
+      category: category || undefined,
       created_at: now,
       updated_at: now
-    };
+    });
     
     return NextResponse.json(newDoc);
   } catch (error) {

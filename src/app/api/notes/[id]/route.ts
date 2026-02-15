@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db, Note } from '@/lib/database';
+import { db } from '@/lib/database';
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id: idParam } = await params;
-    const id = parseInt(idParam);
-    if (isNaN(id)) {
+    const { id } = await params;
+    const idNum = parseInt(id);
+    if (isNaN(idNum)) {
       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     }
     
@@ -18,21 +15,14 @@ export async function PATCH(
       return NextResponse.json({ error: 'Invalid seen value' }, { status: 400 });
     }
     
-    const now = Date.now();
-    const stmt = db.prepare(`
-      UPDATE notes 
-      SET seen = ?, processed_at = ?
-      WHERE id = ?
-    `);
+    const updatedNote = db.updateNote(idNum, {
+      seen,
+      processed_at: seen ? Date.now() : undefined
+    });
     
-    const result = stmt.run(seen, seen ? now : null, id);
-    
-    if (result.changes === 0) {
+    if (!updatedNote) {
       return NextResponse.json({ error: 'Note not found' }, { status: 404 });
     }
-    
-    const updatedStmt = db.prepare('SELECT * FROM notes WHERE id = ?');
-    const updatedNote = updatedStmt.get(id) as Note;
     
     return NextResponse.json(updatedNote);
   } catch (error) {
@@ -41,21 +31,17 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id: idParam } = await params;
-    const id = parseInt(idParam);
-    if (isNaN(id)) {
+    const { id } = await params;
+    const idNum = parseInt(id);
+    if (isNaN(idNum)) {
       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     }
     
-    const stmt = db.prepare('DELETE FROM notes WHERE id = ?');
-    const result = stmt.run(id);
+    const deleted = db.deleteNote(idNum);
     
-    if (result.changes === 0) {
+    if (!deleted) {
       return NextResponse.json({ error: 'Note not found' }, { status: 404 });
     }
     

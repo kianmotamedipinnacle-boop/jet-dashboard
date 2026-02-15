@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/database';
 
 // PUT - Update kanban card
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const id = parseInt(params.id);
+    const { id } = await params;
+    const idNum = parseInt(id);
     const body = await request.json();
     const { title, description, tags, status, priority, auto_pickup } = body;
 
@@ -12,7 +13,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
     }
 
-    const updatedCard = db.updateKanbanCard(id, {
+    const updatedCard = db.updateKanbanCard(idNum, {
       title,
       description,
       tags,
@@ -34,10 +35,11 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE - Delete kanban card
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const id = parseInt(params.id);
-    const deleted = db.deleteKanbanCard(id);
+    const { id } = await params;
+    const idNum = parseInt(id);
+    const deleted = db.deleteKanbanCard(idNum);
 
     if (!deleted) {
       return NextResponse.json({ error: 'Card not found' }, { status: 404 });

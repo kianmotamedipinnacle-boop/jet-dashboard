@@ -1,47 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db, BrainCard } from '@/lib/database';
-import { validatePassword } from '@/lib/auth';
+import { db } from '@/lib/database';
 
 // PUT - Update brain card
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
+    const idNum = parseInt(id);
     const body = await request.json();
-    const { title, content, tags, category, password } = body;
-    const { id: idParam } = await params;
-    const id = parseInt(idParam);
+    const { title, content, tags, category } = body;
 
-    // Validate password for API access
-    if (password && !validatePassword(password)) {
-      return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
+    if (!title) {
+      return NextResponse.json({ error: 'Title is required' }, { status: 400 });
     }
 
-    if (!id || isNaN(id)) {
-      return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
-    }
+    const updatedCard = db.updateBrainCard(idNum, {
+      title,
+      content,
+      tags,
+      category,
+      updated_date: Date.now()
+    });
 
-    const now = Date.now();
-    const stmt = db.prepare(`
-      UPDATE brain_cards 
-      SET title = COALESCE(?, title),
-          content = COALESCE(?, content),
-          tags = COALESCE(?, tags),
-          category = COALESCE(?, category),
-          updated_date = ?
-      WHERE id = ?
-    `);
-    
-    const result = stmt.run(title, content, tags, category, now, id);
-    
-    if (result.changes === 0) {
+    if (!updatedCard) {
       return NextResponse.json({ error: 'Card not found' }, { status: 404 });
     }
-
-    // Fetch updated card
-    const getStmt = db.prepare('SELECT * FROM brain_cards WHERE id = ?');
-    const updatedCard = getStmt.get(id) as BrainCard;
 
     return NextResponse.json(updatedCard);
   } catch (error) {
@@ -51,29 +33,13 @@ export async function PUT(
 }
 
 // DELETE - Delete brain card
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const url = new URL(request.url);
-    const password = url.searchParams.get('password');
-    const { id: idParam } = await params;
-    const id = parseInt(idParam);
+    const { id } = await params;
+    const idNum = parseInt(id);
+    const deleted = db.deleteBrainCard(idNum);
 
-    // Validate password for API access
-    if (password && !validatePassword(password)) {
-      return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
-    }
-
-    if (!id || isNaN(id)) {
-      return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
-    }
-
-    const stmt = db.prepare('DELETE FROM brain_cards WHERE id = ?');
-    const result = stmt.run(id);
-    
-    if (result.changes === 0) {
+    if (!deleted) {
       return NextResponse.json({ error: 'Card not found' }, { status: 404 });
     }
 

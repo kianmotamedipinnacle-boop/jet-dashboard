@@ -1,18 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable static exports for better performance
+  // Standalone output for Railway deployment
   output: 'standalone',
   
-  // Handle SQLite properly in production
-  serverExternalPackages: ['better-sqlite3'],
+  // Optimize for production
+  reactStrictMode: true,
 
-  // Webpack configuration to handle SQLite binary
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.externals.push('better-sqlite3');
-    }
-    return config;
-  }
+  // Handle static file serving
+  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
+  
+  // Disable source maps in production to speed up build
+  productionBrowserSourceMaps: false,
+  
+  // Transpile packages if needed
+  transpilePackages: [],
 };
 
 module.exports = nextConfig;

@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Jet Avatar Animations */
-@import '../styles/jet-animations.css';
-
 @layer base {
   body {
     @apply bg-gray-900 text-white;
@@ -48,4 +45,193 @@
 /* Smooth transitions */
 * {
   transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+}
+
+/* Custom Jet Avatar Animations */
+.jet-avatar {
+  position: relative;
+  display: inline-block;
+  animation: jetFloat 3s ease-in-out infinite;
+}
+
+.jet-avatar svg {
+  transition: transform 0.3s ease;
+}
+
+.jet-avatar.working svg {
+  animation: jetSpeedUp 1s ease-in-out infinite;
+}
+
+.jet-avatar.thinking svg {
+  animation: jetThinking 2s ease-in-out infinite;
+}
+
+.jet-avatar.error svg {
+  animation: jetError 0.5s ease-in-out 3;
+}
+
+@keyframes jetFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes jetSpeedUp {
+  0% {
+    transform: translateX(0px) scale(1);
+  }
+  50% {
+    transform: translateX(5px) scale(1.05);
+  }
+  100% {
+    transform: translateX(0px) scale(1);
+  }
+}
+
+@keyframes jetThinking {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-2deg);
+  }
+  75% {
+    transform: rotate(2deg);
+  }
+}
+
+@keyframes jetError {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
+}
+
+/* Propeller animation */
+.propeller {
+  transform-origin: center;
+  animation: propellerSpin 0.1s linear infinite;
+}
+
+.working .propeller {
+  animation-duration: 0.05s;
+}
+
+@keyframes propellerSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Exhaust trail */
+.exhaust {
+  opacity: 0.7;
+  animation: exhaustFlow 2s ease-in-out infinite;
+}
+
+.working .exhaust {
+  animation-duration: 0.5s;
+  opacity: 1;
+}
+
+@keyframes exhaustFlow {
+  0%, 100% {
+    transform: scaleX(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scaleX(1.2);
+    opacity: 0.4;
+  }
+}
+
+/* Gemini-inspired glow effect */
+.gemini-glow {
+  position: relative;
+}
+
+.gemini-glow::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #4285f4, #34a853, #fbbc04, #ea4335);
+  border-radius: 50%;
+  opacity: 0;
+  animation: geminiPulse 4s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes geminiPulse {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.05);
+  }
+}
+
+/* Status-based eye expressions */
+.eyes.idle {
+  animation: blink 6s infinite;
+}
+
+.eyes.working {
+  animation: none;
+}
+
+.eyes.thinking circle:first-child {
+  animation: eyeMove 2s ease-in-out infinite;
+}
+
+.eyes.error {
+  animation: shake 0.5s ease-in-out 3;
+}
+
+@keyframes blink {
+  0%, 90%, 100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes eyeMove {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-1px);
+  }
+  75% {
+    transform: translateX(1px);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
 }

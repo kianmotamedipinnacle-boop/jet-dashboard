@@ -1,19 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db, Doc } from '@/lib/database';
+import { db } from '@/lib/database';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id: idParam } = await params;
-    const id = parseInt(idParam);
-    if (isNaN(id)) {
+    const { id } = await params;
+    const idNum = parseInt(id);
+    if (isNaN(idNum)) {
       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     }
     
-    const stmt = db.prepare('SELECT * FROM docs WHERE id = ?');
-    const doc = stmt.get(id) as Doc | undefined;
+    const docs = db.getAllDocs();
+    const doc = docs.find(d => d.id === idNum);
     
     if (!doc) {
       return NextResponse.json({ error: 'Doc not found' }, { status: 404 });
@@ -26,14 +23,11 @@ export async function GET(
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id: idParam } = await params;
-    const id = parseInt(idParam);
-    if (isNaN(id)) {
+    const { id } = await params;
+    const idNum = parseInt(id);
+    if (isNaN(idNum)) {
       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     }
     
@@ -43,21 +37,16 @@ export async function PUT(
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
     
-    const now = Date.now();
-    const stmt = db.prepare(`
-      UPDATE docs 
-      SET title = ?, content = ?, category = ?, updated_at = ?
-      WHERE id = ?
-    `);
+    const updatedDoc = db.updateDoc(idNum, {
+      title,
+      content,
+      category: category || undefined,
+      updated_at: Date.now()
+    });
     
-    const result = stmt.run(title, content, category || null, now, id);
-    
-    if (result.changes === 0) {
+    if (!updatedDoc) {
       return NextResponse.json({ error: 'Doc not found' }, { status: 404 });
     }
-    
-    const updatedStmt = db.prepare('SELECT * FROM docs WHERE id = ?');
-    const updatedDoc = updatedStmt.get(id) as Doc;
     
     return NextResponse.json(updatedDoc);
   } catch (error) {
@@ -66,21 +55,17 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id: idParam } = await params;
-    const id = parseInt(idParam);
-    if (isNaN(id)) {
+    const { id } = await params;
+    const idNum = parseInt(id);
+    if (isNaN(idNum)) {
       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     }
     
-    const stmt = db.prepare('DELETE FROM docs WHERE id = ?');
-    const result = stmt.run(id);
+    const deleted = db.deleteDoc(idNum);
     
-    if (result.changes === 0) {
+    if (!deleted) {
       return NextResponse.json({ error: 'Doc not found' }, { status: 404 });
     }
     
