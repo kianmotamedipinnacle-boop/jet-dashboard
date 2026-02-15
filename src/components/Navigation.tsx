@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { LayoutGrid, Brain, LogOut, Menu, ScrollText, FileText, Home } from 'lucide-react';
+import { LayoutGrid, Brain, LogOut, Menu, ScrollText, FileText, Home, Zap } from 'lucide-react';
 
 interface NavigationProps {
-  currentView: 'dashboard' | 'kanban' | 'brain' | 'log' | 'docs';
-  onViewChange: (view: 'dashboard' | 'kanban' | 'brain' | 'log' | 'docs') => void;
+  currentView: 'dashboard' | 'kanban' | 'brain' | 'log' | 'docs' | 'medicare';
+  onViewChange: (view: 'dashboard' | 'kanban' | 'brain' | 'log' | 'docs' | 'medicare') => void;
 }
 
 export function Navigation({ currentView, onViewChange }: NavigationProps) {
@@ -27,6 +27,11 @@ export function Navigation({ currentView, onViewChange }: NavigationProps) {
       id: 'dashboard' as const,
       label: 'Dashboard',
       icon: Home,
+    },
+    {
+      id: 'medicare' as const,
+      label: 'Jet Productivity',
+      icon: Zap,
     },
     {
       id: 'kanban' as const,
