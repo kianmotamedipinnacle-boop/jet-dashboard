@@ -8,6 +8,7 @@ import { DashboardOverview } from '@/components/DashboardOverview';
 import { ActivityLog } from '@/components/ActivityLog';
 import { DocsSection } from '@/components/DocsSection';
 import { StatusIndicator } from '@/components/StatusIndicator';
+import { JetAvatar } from '@/components/JetAvatar';
 import { KanbanCard, BrainCard } from '@/lib/database';
 
 type AgentStatus = 'idle' | 'working' | 'thinking' | 'error';
@@ -92,11 +93,9 @@ export default function DashboardPage() {
         <div className="px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              {/* Large Animated Jet Avatar */}
+              {/* Thomas-style Jet Avatar */}
               <div className="relative">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-600 flex items-center justify-center text-3xl animate-pulse">
-                  ✈️
-                </div>
+                <JetAvatar status={agentStatus} size={64} />
                 <StatusIndicator status={agentStatus} />
               </div>
               
