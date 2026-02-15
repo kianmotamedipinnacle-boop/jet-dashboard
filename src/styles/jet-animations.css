@@ -1,0 +1,132 @@
+/* Custom Jet Avatar Animations - Inspired by Google Gemini */
+
+@keyframes propeller-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes exhaust-flow {
+  0% {
+    opacity: 0.8;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translateY(5px) scale(1.1);
+  }
+  100% {
+    opacity: 0.1;
+    transform: translateY(10px) scale(1.3);
+  }
+}
+
+@keyframes status-glow {
+  0% {
+    box-shadow: 0 0 5px currentColor;
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
+    opacity: 0.8;
+  }
+  100% {
+    box-shadow: 0 0 5px currentColor;
+    opacity: 1;
+  }
+}
+
+@keyframes thinking-particles {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-20px) rotate(180deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes gemini-morph {
+  0% {
+    border-radius: 50%;
+    transform: rotate(0deg);
+  }
+  25% {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    transform: rotate(90deg);
+  }
+  50% {
+    border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+    transform: rotate(180deg);
+  }
+  75% {
+    border-radius: 30% 70% 70% 30% / 70% 30% 30% 70%;
+    transform: rotate(270deg);
+  }
+  100% {
+    border-radius: 50%;
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes working-pulse {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes error-shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-2px) rotate(-1deg); }
+  50% { transform: translateX(2px) rotate(1deg); }
+  75% { transform: translateX(-2px) rotate(-1deg); }
+  100% { transform: translateX(0); }
+}
+
+/* Apply custom animations */
+.jet-propeller-working {
+  animation: propeller-spin 0.1s linear infinite;
+}
+
+.jet-exhaust {
+  animation: exhaust-flow 1.5s ease-in-out infinite;
+}
+
+.jet-status-glow {
+  animation: status-glow 2s ease-in-out infinite;
+}
+
+.jet-thinking-particles {
+  animation: thinking-particles 2s ease-in-out infinite;
+}
+
+.jet-gemini-morph {
+  animation: gemini-morph 4s ease-in-out infinite;
+}
+
+.jet-working-pulse {
+  animation: working-pulse 1.5s ease-in-out infinite;
+}
+
+.jet-error-shake {
+  animation: error-shake 0.5s ease-in-out 3;
+}
