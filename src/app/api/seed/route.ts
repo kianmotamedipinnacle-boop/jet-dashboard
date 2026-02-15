@@ -1,138 +1,142 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/database';
 
-const realTasks = [
-  // Agent Onboarding & Training (In Progress)
+const jetTasks = [
+  // Current Active Tasks (In Progress)
   {
-    title: "Caitlin & Hella Agent Onboarding",
-    description: "Complete onboarding process for 2 new agents starting Monday Feb 17. Includes contracting, training, and system setup.",
-    status: "in_progress" as const,
-    priority: "high" as const,
-    labels: ["agents", "onboarding", "urgent"]
-  },
-  {
-    title: "Complete Manager Slot Allocation System", 
-    description: "Finish n8n workflow for 7-stage onboarding tracking (contracting → AI training → recorded sessions → RTS verification → HEAP contracts → CRM setup → 10 deals completed)",
-    status: "in_progress" as const,
-    priority: "high" as const,
-    labels: ["automation", "n8n", "systems"]
-  },
-  {
-    title: "HIPAA-Compliant CRM Development",
-    description: "Build custom CRM with Claude Code for client management, deals tracking, and payroll integration. Must meet HIPAA compliance requirements.",
+    title: "Redesign Animated Avatar",
+    description: "User feedback: current jet avatar looks 'mean and angry' and doesn't look like a plane. Research better Thomas-style front-facing design that's friendly and clearly jet-shaped.",
     status: "in_progress" as const,
     priority: "medium" as const,
-    labels: ["development", "hipaa", "crm"]
+    labels: ["ui", "design", "avatar", "user-feedback"]
+  },
+  {
+    title: "Cost Optimization Monitoring",
+    description: "Monitor smart model routing effectiveness. Track daily savings from Haiku/Sonnet/Opus routing and batch email processing. Generate weekly cost reports.",
+    status: "in_progress" as const,
+    priority: "high" as const,
+    labels: ["cost-optimization", "monitoring", "efficiency"]
+  },
+  {
+    title: "Automated Email Processing",
+    description: "Process daily email batches from info@armomedicare.com and kianmotamedi.pinnacle@gmail.com. Categorize and generate action items for Kian.",
+    status: "in_progress" as const,
+    priority: "high" as const,
+    labels: ["automation", "email", "daily-tasks"]
+  },
+  {
+    title: "Tax Receipt Processing",
+    description: "Ongoing processing of business receipts and commission emails for Kian's tax organization. Target: 20-30 receipts per heartbeat.",
+    status: "in_progress" as const,
+    priority: "medium" as const,
+    labels: ["finance", "tax-prep", "organization"]
   },
   
-  // Systems & Automation (Backlog)
+  // Upcoming Tasks (Backlog)
   {
-    title: "Call Recording Solution Implementation",
-    description: "Research and implement call recording for Medicare calls from Pakistani lead center. Evaluate Piezo, VOMO AI, Audio Hijack options.",
+    title: "Deploy Dashboard to Railway",
+    description: "Once GitHub repo is created, push jet-dashboard code and deploy to Railway for permanent hosting. Configure production environment.",
     status: "backlog" as const,
     priority: "high" as const,
-    labels: ["compliance", "recording", "research"]
+    labels: ["deployment", "railway", "github", "infrastructure"]
   },
   {
-    title: "Automated Mailer System Setup",
-    description: "Complete n8n + Thanks.io API integration for personalized postcards/magna cards with agent-specific branding from Airtable data.",
+    title: "ProtonMail Bridge Integration",
+    description: "Complete ProtonMail Bridge setup on Mac Mini to enable IMAP/SMTP access to jet.armo@proton.me for automated email workflows.",
     status: "backlog" as const,
     priority: "medium" as const,
-    labels: ["automation", "marketing", "thanks.io"]
+    labels: ["email", "protonmail", "mac-mini", "integration"]
   },
   {
-    title: "Gmail OAuth2 Migration",
-    description: "Switch from app passwords to read-only OAuth2 for both Gmail accounts (info@armomedicare.com, kianmotamedi.pinnacle@gmail.com)",
+    title: "Enhanced Voice Capabilities",
+    description: "Research and implement better Hormozi-style voice on ElevenLabs for more engaging TTS responses when appropriate.",
     status: "backlog" as const,
     priority: "low" as const,
-    labels: ["security", "gmail", "oauth"]
+    labels: ["tts", "voice", "elevenlabs", "enhancement"]
   },
   {
-    title: "jet@armomedicare.com Email Setup",
-    description: "Create and configure jet@armomedicare.com email address in Google Workspace for Jet's business communications.",
+    title: "Workflow Optimization Analysis",
+    description: "Analyze Kian's workflows and proactively suggest improvements, features, and optimizations. Continuous process improvement.",
+    status: "backlog" as const,
+    priority: "medium" as const,
+    labels: ["optimization", "analysis", "proactive", "workflow"]
+  },
+  {
+    title: "Memory System Enhancement",
+    description: "Improve memory recall and organization. Better integration between daily logs, MEMORY.md, and contextual information retrieval.",
     status: "backlog" as const,
     priority: "low" as const,
-    labels: ["email", "workspace", "setup"]
+    labels: ["memory", "organization", "context", "improvement"]
   },
   
-  // Business Development (Backlog/In Progress)
+  // Recently Completed (Done)
   {
-    title: "Carrier Contract Negotiations", 
-    description: "Finalize contracts with Humana, UHC, Aetna, Wellcare for agency. Critical blocker for agent sales.",
-    status: "backlog" as const,
-    priority: "high" as const,
-    labels: ["business", "contracts", "carriers", "blocker"]
-  },
-  {
-    title: "QuickBooks Payroll Setup",
-    description: "Configure first payroll cycle for February agents. Includes tax registrations, banking integration, and compliance setup.",
-    status: "in_progress" as const,
-    priority: "high" as const,
-    labels: ["payroll", "quickbooks", "finance"]
-  },
-  {
-    title: "TX & FL State Registration Completion",
-    description: "Ensure all state tax and regulatory registrations are complete for both Texas and Florida operations.",
-    status: "backlog" as const,
-    priority: "medium" as const,
-    labels: ["compliance", "legal", "states"]
-  },
-  
-  // Completed Items
-  {
-    title: "TDI E&O Bond Issue Resolution",
-    description: "Successfully resolved E&O bond deficiency with Texas Department of Insurance for entity license approval.",
+    title: "Custom Animated Avatar Implementation",
+    description: "Created custom SVG-based jet avatar with Thomas-style front-facing design, dynamic expressions, and Google Gemini-inspired animations.",
     status: "done" as const,
     priority: "high" as const,
-    labels: ["compliance", "tdi", "resolved"]
+    labels: ["avatar", "svg", "animation", "completed"]
   },
   {
-    title: "ProtonMail Plus Account Setup",
-    description: "Created and configured jet.armo@proton.me with Bridge access for secure business communications.",
+    title: "Smart Model Routing System",
+    description: "Implemented intelligent model routing (Haiku/Sonnet/Opus) with cost optimization. Created SMART_ROUTING.md and cost-optimizer.py.",
+    status: "done" as const,
+    priority: "high" as const,
+    labels: ["cost-optimization", "routing", "efficiency", "completed"]
+  },
+  {
+    title: "Batch Email Processing System",
+    description: "Built email-batch-processor.py to handle 20-30 emails in single context, saving ~$0.50 per batch vs individual processing.",
+    status: "done" as const,
+    priority: "high" as const,
+    labels: ["email", "batch-processing", "cost-savings", "completed"]
+  },
+  {
+    title: "Dashboard Infrastructure Setup",
+    description: "Built complete Next.js dashboard with kanban, brain notes, activity log, and real-time status tracking. Klaus-style design implemented.",
+    status: "done" as const,
+    priority: "high" as const,
+    labels: ["dashboard", "nextjs", "infrastructure", "completed"]
+  },
+  {
+    title: "Mac Mini Node Configuration",
+    description: "Successfully configured Mac Mini as autonomous node with full permissions, VS Code setup, and screen recording capabilities.",
     status: "done" as const,
     priority: "medium" as const,
-    labels: ["email", "protonmail", "security"]
-  },
-  {
-    title: "OpenClaw Personal Assistant Deployment",
-    description: "Successfully deployed Jet AI assistant on Vultr VPS with Telegram integration and Mac Mini node connection.",
-    status: "done" as const,
-    priority: "high" as const,
-    labels: ["ai", "automation", "infrastructure"]
-  },
-  {
-    title: "2Captcha Integration Setup",
-    description: "Configured 2Captcha API (a00b30e3f8a9ac001b73cfcaf1bca957) with $10 funding for automated CAPTCHA solving.",
-    status: "done" as const,
-    priority: "low" as const,
-    labels: ["automation", "captcha", "api"]
+    labels: ["mac-mini", "node", "automation", "completed"]
   }
 ];
 
-const brainCards = [
+const jetBrainCards = [
   {
-    title: "Agent Onboarding SOP",
-    content: "Complete standard operating procedure for Medicare agent onboarding including 23-topic training curriculum, compliance requirements, and performance tracking.",
-    category: "documentation" as const,
-    tags: ["sop", "training", "medicare"]
-  },
-  {
-    title: "Lead Cost Analysis - February 2026",
-    content: "$6-8K/agent/month baseline cost through Enroll Here platform. Pakistani sources less trusted but cheaper. Need to evaluate ROI vs quality trade-offs.",
-    category: "analysis" as const,
-    tags: ["leads", "costs", "roi"]
-  },
-  {
-    title: "Cash Flow Bridge Strategy",
-    content: "Agents need 10-12 months to become profitable due to commission proration. Ali & Mark hard money loans (~$50K/broker agent) required to bridge mid-year gap before AEP.",
+    title: "Cost Optimization Strategy",
+    content: "Smart model routing implementation saves ~$2.74/day ($1000+/year). Haiku for simple tasks, Sonnet for analysis, Opus for critical decisions. Batch email processing adds $0.50/day savings. Monitor effectiveness and adjust routing rules.",
     category: "strategy" as const,
-    tags: ["finance", "investors", "cash-flow"]
+    tags: ["cost-optimization", "model-routing", "efficiency"]
   },
   {
-    title: "Retention CRM Specifications",
-    content: "Custom CRM must track client touchpoints, automate follow-ups, and integrate with Thanks.io for personalized mailers. Target 75-80% persistency vs industry 60-65%.",
-    category: "specification" as const,
-    tags: ["crm", "retention", "specifications"]
+    title: "Workflow Automation Patterns",
+    content: "Key automation opportunities: batch email processing (20-30 emails/context), automated heartbeat tasks, smart file organization. Target: 80% routine task automation, 60% reduction in manual intervention.",
+    category: "analysis" as const,
+    tags: ["automation", "workflows", "efficiency"]
+  },
+  {
+    title: "User Interface Design Philosophy",
+    content: "Thomas the Train inspiration for avatar design: front-facing, expressive, friendly but professional. Avoid emojis - use custom SVG. Status-reactive animations (idle/working/thinking/error). User feedback: current avatar too 'mean and angry'.",
+    category: "design" as const,
+    tags: ["ui", "avatar", "user-feedback", "thomas-style"]
+  },
+  {
+    title: "Memory & Context Management",
+    content: "Daily memory files (memory/YYYY-MM-DD.md) for raw logs, MEMORY.md for curated long-term memory. Use memory_search before answering historical questions. Balance context size with cost optimization.",
+    category: "documentation" as const,
+    tags: ["memory", "context", "organization", "best-practices"]
+  },
+  {
+    title: "Proactive Assistance Framework",
+    content: "Core mandate: constantly suggest improvements, features, workflow optimizations. Look ahead, save time, make things better without being asked. Focus on business impact and efficiency gains.",
+    category: "philosophy" as const,
+    tags: ["proactive", "assistance", "optimization", "mindset"]
   }
 ];
 
@@ -149,7 +153,7 @@ export async function POST(request: NextRequest) {
     `);
 
     const now = Date.now();
-    for (const task of realTasks) {
+    for (const task of jetTasks) {
       insertKanbanCard.run(
         task.title,
         task.description,
@@ -167,7 +171,7 @@ export async function POST(request: NextRequest) {
       VALUES (?, ?, ?, ?, ?, ?)
     `);
 
-    for (const card of brainCards) {
+    for (const card of jetBrainCards) {
       insertBrainCard.run(
         card.title,
         card.content,
@@ -186,13 +190,13 @@ export async function POST(request: NextRequest) {
 
     insertLog.run(
       'seed_data',
-      `Populated dashboard with ${realTasks.length} real tasks and ${brainCards.length} brain cards from Kian's business`,
+      `Populated dashboard with ${jetTasks.length} Jet tasks and ${jetBrainCards.length} brain cards for AI assistant workflow`,
       now
     );
 
     return NextResponse.json({ 
       success: true, 
-      message: `Seeded ${realTasks.length} kanban cards and ${brainCards.length} brain cards` 
+      message: `Seeded ${jetTasks.length} Jet kanban cards and ${jetBrainCards.length} brain cards` 
     });
 
   } catch (error) {

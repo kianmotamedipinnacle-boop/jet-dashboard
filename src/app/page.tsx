@@ -140,8 +140,8 @@ export default function DashboardPage() {
         {currentView === 'kanban' && (
           <div>
             <div className="mb-6">
-              <h1 className="text-2xl font-bold text-white mb-2">Task Board</h1>
-              <p className="text-gray-400">Current projects and actionable items</p>
+              <h1 className="text-2xl font-bold text-white mb-2">Jet's Task Board</h1>
+              <p className="text-gray-400">My current projects and ongoing work</p>
             </div>
             <KanbanBoard cards={kanbanCards} onCardsChange={fetchKanbanCards} />
           </div>

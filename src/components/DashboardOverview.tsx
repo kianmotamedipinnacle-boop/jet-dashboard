@@ -98,8 +98,8 @@ export function DashboardOverview({ onNewNote, agentStatus, setAgentStatus }: Da
   return (
     <div className="space-y-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white mb-2">Dashboard</h1>
-        <p className="text-gray-400">Overview of Jet&apos;s current status and activity</p>
+        <h1 className="text-2xl font-bold text-white mb-2">Jet Dashboard</h1>
+        <p className="text-gray-400">Monitor my current work, status, and system performance</p>
       </div>
 
       {/* Stats Grid */}
