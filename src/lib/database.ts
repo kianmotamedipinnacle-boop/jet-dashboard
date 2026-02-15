@@ -1,101 +1,171 @@
-import Database from 'better-sqlite3';
+import fs from 'fs';
 import path from 'path';
 
 const dbPath = process.env.NODE_ENV === 'production' 
-  ? '/tmp/jet-dashboard.db' 
-  : path.join(process.cwd(), 'jet-dashboard.db');
+  ? '/tmp/jet-dashboard.json' 
+  : path.join(process.cwd(), 'jet-dashboard.json');
 
-const db = new Database(dbPath);
+// Database structure
+interface DatabaseSchema {
+  kanban_cards: KanbanCard[];
+  brain_cards: BrainCard[];
+  activity_log: ActivityLog[];
+  docs: Doc[];
+  notes: Note[];
+  status: Status[];
+}
 
-// Initialize tables
-db.exec(`
-  CREATE TABLE IF NOT EXISTS kanban_cards (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    description TEXT,
-    tags TEXT,
-    status TEXT NOT NULL DEFAULT 'backlog',
-    priority TEXT DEFAULT 'medium',
-    auto_pickup BOOLEAN DEFAULT 0,
-    created_date INTEGER NOT NULL,
-    updated_date INTEGER NOT NULL
-  );
-  CREATE TABLE IF NOT EXISTS brain_cards (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    content TEXT,
-    tags TEXT,
-    category TEXT,
-    created_date INTEGER NOT NULL,
-    updated_date INTEGER NOT NULL
-  );
+// Initialize empty database
+const initDb = (): DatabaseSchema => ({
+  kanban_cards: [],
+  brain_cards: [],
+  activity_log: [],
+  docs: [],
+  notes: [],
+  status: [{
+    id: 1,
+    status: 'Idle',
+    last_sync: Date.now(),
+    updated_at: Date.now()
+  }]
+});
 
-  CREATE TABLE IF NOT EXISTS activity_log (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    timestamp INTEGER NOT NULL,
-    action_type TEXT NOT NULL,
-    description TEXT NOT NULL,
-    metadata TEXT
-  );
-
-  CREATE TABLE IF NOT EXISTS docs (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    content TEXT NOT NULL,
-    category TEXT,
-    created_at INTEGER NOT NULL,
-    updated_at INTEGER NOT NULL
-  );
-
-  CREATE TABLE IF NOT EXISTS notes (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    content TEXT NOT NULL,
-    seen BOOLEAN NOT NULL DEFAULT 0,
-    created_at INTEGER NOT NULL,
-    processed_at INTEGER
-  );
-
-  CREATE TABLE IF NOT EXISTS status (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    status TEXT NOT NULL DEFAULT 'Idle',
-    last_sync INTEGER NOT NULL,
-    updated_at INTEGER NOT NULL
-  );
-
-  CREATE INDEX IF NOT EXISTS idx_kanban_status ON kanban_cards(status);
-  CREATE INDEX IF NOT EXISTS idx_kanban_priority ON kanban_cards(priority);
-  CREATE INDEX IF NOT EXISTS idx_kanban_auto_pickup ON kanban_cards(auto_pickup);
-  CREATE INDEX IF NOT EXISTS idx_brain_category ON brain_cards(category);
-  CREATE INDEX IF NOT EXISTS idx_brain_tags ON brain_cards(tags);
-  CREATE INDEX IF NOT EXISTS idx_activity_timestamp ON activity_log(timestamp);
-  CREATE INDEX IF NOT EXISTS idx_docs_category ON docs(category);
-  CREATE INDEX IF NOT EXISTS idx_notes_seen ON notes(seen);
-`);
-
-// Migration function to add new columns to existing tables
-const runMigrations = () => {
+// Read database
+const readDb = (): DatabaseSchema => {
   try {
-    // Check if priority column exists in kanban_cards
-    const columns = db.prepare("PRAGMA table_info(kanban_cards)").all() as { name: string }[];
-    const hasColumn = (name: string) => columns.some(col => col.name === name);
-    
-    if (!hasColumn('priority')) {
-      db.exec('ALTER TABLE kanban_cards ADD COLUMN priority TEXT DEFAULT "medium"');
+    if (!fs.existsSync(dbPath)) {
+      const newDb = initDb();
+      fs.writeFileSync(dbPath, JSON.stringify(newDb, null, 2));
+      return newDb;
     }
-    
-    if (!hasColumn('auto_pickup')) {
-      db.exec('ALTER TABLE kanban_cards ADD COLUMN auto_pickup BOOLEAN DEFAULT 0');
-    }
+    const data = fs.readFileSync(dbPath, 'utf8');
+    return JSON.parse(data) as DatabaseSchema;
   } catch (error) {
-    // Migrations might fail if columns already exist, which is fine
-    console.log('Migration note:', error);
+    console.error('Database read error:', error);
+    return initDb();
   }
 };
 
-// Run migrations
-runMigrations();
+// Write database
+const writeDb = (data: DatabaseSchema): void => {
+  try {
+    // Ensure directory exists
+    const dir = path.dirname(dbPath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
+  } catch (error) {
+    console.error('Database write error:', error);
+  }
+};
 
-export { db };
+// Simple database operations
+class SimpleDB {
+  private data: DatabaseSchema;
+
+  constructor() {
+    this.data = readDb();
+  }
+
+  // Kanban cards
+  getAllKanbanCards(): KanbanCard[] {
+    return this.data.kanban_cards;
+  }
+
+  addKanbanCard(card: Omit<KanbanCard, 'id'>): KanbanCard {
+    const newCard: KanbanCard = {
+      ...card,
+      id: Math.max(0, ...this.data.kanban_cards.map(c => c.id)) + 1
+    };
+    this.data.kanban_cards.push(newCard);
+    writeDb(this.data);
+    return newCard;
+  }
+
+  updateKanbanCard(id: number, updates: Partial<KanbanCard>): KanbanCard | null {
+    const index = this.data.kanban_cards.findIndex(c => c.id === id);
+    if (index === -1) return null;
+    
+    this.data.kanban_cards[index] = { ...this.data.kanban_cards[index], ...updates };
+    writeDb(this.data);
+    return this.data.kanban_cards[index];
+  }
+
+  deleteKanbanCard(id: number): boolean {
+    const index = this.data.kanban_cards.findIndex(c => c.id === id);
+    if (index === -1) return false;
+    
+    this.data.kanban_cards.splice(index, 1);
+    writeDb(this.data);
+    return true;
+  }
+
+  // Brain cards
+  getAllBrainCards(): BrainCard[] {
+    return this.data.brain_cards;
+  }
+
+  addBrainCard(card: Omit<BrainCard, 'id'>): BrainCard {
+    const newCard: BrainCard = {
+      ...card,
+      id: Math.max(0, ...this.data.brain_cards.map(c => c.id)) + 1
+    };
+    this.data.brain_cards.push(newCard);
+    writeDb(this.data);
+    return newCard;
+  }
+
+  updateBrainCard(id: number, updates: Partial<BrainCard>): BrainCard | null {
+    const index = this.data.brain_cards.findIndex(c => c.id === id);
+    if (index === -1) return null;
+    
+    this.data.brain_cards[index] = { ...this.data.brain_cards[index], ...updates };
+    writeDb(this.data);
+    return this.data.brain_cards[index];
+  }
+
+  // Activity log
+  addActivityLog(log: Omit<ActivityLog, 'id'>): ActivityLog {
+    const newLog: ActivityLog = {
+      ...log,
+      id: Math.max(0, ...this.data.activity_log.map(l => l.id)) + 1
+    };
+    this.data.activity_log.push(newLog);
+    writeDb(this.data);
+    return newLog;
+  }
+
+  getRecentActivityLogs(limit: number = 50): ActivityLog[] {
+    return this.data.activity_log
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, limit);
+  }
+
+  // Status
+  getStatus(): Status | null {
+    return this.data.status[0] || null;
+  }
+
+  updateStatus(updates: Partial<Status>): Status | null {
+    if (this.data.status.length === 0) {
+      const newStatus: Status = {
+        id: 1,
+        status: 'Idle',
+        last_sync: Date.now(),
+        updated_at: Date.now(),
+        ...updates
+      };
+      this.data.status.push(newStatus);
+    } else {
+      this.data.status[0] = { ...this.data.status[0], ...updates };
+    }
+    writeDb(this.data);
+    return this.data.status[0];
+  }
+}
+
+export const db = new SimpleDB();
 
 export interface KanbanCard {
   id: number;

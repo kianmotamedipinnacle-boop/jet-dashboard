@@ -9,29 +9,28 @@ export async function GET(request: NextRequest) {
     const autoPickup = url.searchParams.get('auto_pickup') === 'true';
     const status = url.searchParams.get('status');
     
-    let query = 'SELECT * FROM kanban_cards';
-    let params: any[] = [];
+    let cards = db.getAllKanbanCards();
     
-    const conditions: string[] = [];
-    
+    // Apply filters
     if (autoPickup) {
-      conditions.push('auto_pickup = ?');
-      params.push(1);
+      cards = cards.filter(card => card.auto_pickup);
     }
     
     if (status) {
-      conditions.push('status = ?');
-      params.push(status);
+      cards = cards.filter(card => card.status === status);
     }
     
-    if (conditions.length > 0) {
-      query += ' WHERE ' + conditions.join(' AND ');
-    }
+    // Sort by priority and creation date
+    const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 };
+    cards.sort((a, b) => {
+      const aPriority = priorityOrder[a.priority] || 2;
+      const bPriority = priorityOrder[b.priority] || 2;
+      if (aPriority !== bPriority) {
+        return bPriority - aPriority; // Higher priority first
+      }
+      return b.created_date - a.created_date; // Newer first
+    });
     
-    query += ' ORDER BY priority DESC, created_date DESC';
-    
-    const stmt = db.prepare(query);
-    const cards = stmt.all(...params) as KanbanCard[];
     return NextResponse.json(cards);
   } catch (error) {
     console.error('Error fetching kanban cards:', error);
@@ -55,33 +54,16 @@ export async function POST(request: NextRequest) {
     }
 
     const now = Date.now();
-    const stmt = db.prepare(`
-      INSERT INTO kanban_cards (title, description, tags, status, priority, auto_pickup, created_date, updated_date)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    
-    const result = stmt.run(
-      title, 
-      description || null, 
-      tags || null, 
-      status || 'backlog',
-      priority || 'medium',
-      auto_pickup ? 1 : 0,
-      now, 
-      now
-    );
-    
-    const newCard: KanbanCard = {
-      id: result.lastInsertRowid as number,
+    const newCard = db.addKanbanCard({
       title,
-      description,
-      tags,
+      description: description || undefined,
+      tags: tags || undefined,
       status: status || 'backlog',
       priority: priority || 'medium',
       auto_pickup: auto_pickup || false,
       created_date: now,
       updated_date: now
-    };
+    });
 
     return NextResponse.json(newCard, { status: 201 });
   } catch (error) {
