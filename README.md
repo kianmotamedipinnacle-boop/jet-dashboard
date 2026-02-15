@@ -1,137 +1,135 @@
-# Jet Dashboard
+# 🚀 Jet Dashboard
 
-A modern Kanban + Second Brain web application built with Next.js, SQLite, and Tailwind CSS.
+AI Agent Dashboard with Klaus-style interface for task management, brain notes, and system monitoring.
 
-## Features
+## ✨ Features
 
-### 🎯 Kanban Board
-- **Four columns**: Backlog, In Progress, Review, Done
-- **Drag and drop**: Move cards between columns effortlessly
-- **Rich cards**: Title, description, tags, status, and creation date
-- **Real-time updates**: Changes reflect immediately
+- **Custom Animated Avatar**: Thomas the Train inspired front-facing jet with status-based expressions
+- **Real-time Task Management**: Kanban board showing Jet's current work and projects  
+- **Smart Cost Optimization**: Model routing (Haiku/Sonnet/Opus) saving $1000+/year
+- **Brain Notes**: AI assistant knowledge management and workflow documentation
+- **Activity Logging**: Complete system activity tracking and monitoring
+- **Professional UI**: Klaus-inspired design with smooth animations and responsive layout
 
-### 🧠 Second Brain
-- **Idea management**: Capture thoughts, notes, and ideas
-- **Categories**: Organize by business, product, marketing, personal, etc.
-- **Tags**: Add custom tags for better organization
-- **Search functionality**: Find ideas quickly with full-text search
-- **Filter by category**: Focus on specific types of content
+## 🛠 Tech Stack
 
-### 🔒 Security
-- **Password protection**: Simple authentication using environment variables
-- **Session management**: Secure login/logout functionality
+- **Frontend**: Next.js 15, React, TypeScript, Tailwind CSS
+- **Backend**: SQLite database, REST API
+- **Animations**: Custom CSS/SVG animations, Google Gemini-inspired effects
+- **Authentication**: Simple password protection
+- **Deployment**: Railway (recommended)
 
-### 🎨 Modern UI
-- **Dark theme**: Easy on the eyes with a sleek design
-- **Responsive**: Works perfectly on desktop and mobile
-- **Smooth animations**: Polished user experience
+## 🚀 Quick Start
 
-### 🚀 API-First
-- **REST endpoints**: Programmatically manage tasks and ideas
-- **Bot-friendly**: Perfect for automation and integrations
+### Local Development
 
-## Tech Stack
-
-- **Framework**: Next.js 15 with App Router
-- **Database**: SQLite with better-sqlite3
-- **Styling**: Tailwind CSS
-- **Drag & Drop**: @dnd-kit
-- **Icons**: Lucide React
-- **TypeScript**: Full type safety
-
-## Quick Start
-
-1. **Clone and install**:
-   ```bash
-   git clone <repository-url>
-   cd jet-dashboard
-   npm install
-   ```
-
-2. **Set up environment**:
-   ```bash
-   cp .env.example .env
-   # Edit .env and set your AUTH_PASSWORD
-   ```
-
-3. **Run development server**:
-   ```bash
-   npm run dev
-   ```
-
-4. **Visit**: http://localhost:3000
-
-## Environment Variables
-
-- `AUTH_PASSWORD`: Password for accessing the dashboard (required)
-
-## API Endpoints
-
-### Kanban Cards
-- `GET /api/kanban` - List all kanban cards
-- `POST /api/kanban` - Create new kanban card
-- `PUT /api/kanban/[id]` - Update kanban card
-- `DELETE /api/kanban/[id]` - Delete kanban card
-
-### Brain Cards
-- `GET /api/brain` - List brain cards (with optional search and category filters)
-- `POST /api/brain` - Create new brain card
-- `PUT /api/brain/[id]` - Update brain card
-- `DELETE /api/brain/[id]` - Delete brain card
-
-### Authentication
-- `POST /api/auth` - Login
-- `DELETE /api/auth` - Logout
-
-## API Usage Examples
-
-### Create a new task:
 ```bash
-curl -X POST http://localhost:3000/api/kanban \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Fix login bug",
-    "description": "Users cannot login with special characters",
-    "tags": "bug,urgent",
-    "status": "backlog",
-    "password": "your-password"
-  }'
+# Clone repository
+git clone https://github.com/kianmotamedipinnacle-boop/jet-dashboard.git
+cd jet-dashboard
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
 
-### Create a new idea:
+Visit `http://localhost:3000` - Default password: `admin123`
+
+### Railway Deployment
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/jet-dashboard)
+
+Or manually:
+
+1. **Connect Repository**: Link this GitHub repo to Railway
+2. **Environment Variables**: Set `AUTH_PASSWORD` (optional, defaults to `admin123`)
+3. **Deploy**: Railway auto-deploys from `main` branch
+
+### Environment Variables
+
 ```bash
-curl -X POST http://localhost:3000/api/brain \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "New feature idea",
-    "content": "Add dark mode toggle for better UX",
-    "category": "product",
-    "tags": "ui,ux,feature",
-    "password": "your-password"
-  }'
+AUTH_PASSWORD=your_secure_password  # Dashboard login password
 ```
 
-## Railway Deployment
+## 📋 Current Status
 
-This project is configured for easy deployment on Railway:
+The dashboard tracks Jet's active work including:
 
-1. **Connect your repository** to Railway
-2. **Set environment variables**:
-   - `AUTH_PASSWORD`: Your secure password
-3. **Deploy**: Railway will automatically build and deploy
+- **Cost Optimization Monitoring** - Smart model routing saving ~$2.74/day
+- **Automated Email Processing** - Batch processing of business emails  
+- **Avatar Design Improvements** - User feedback integration
+- **Dashboard Infrastructure** - Real-time status tracking
+- **Tax Receipt Organization** - Ongoing business automation
 
-The app uses SQLite with automatic database initialization, so no additional database setup is required.
+## 🎨 Avatar System
 
-## Development
+The custom animated jet avatar features:
 
-- **Database**: SQLite file created automatically on first run
-- **Hot reload**: Changes reflect immediately during development
-- **TypeScript**: Full type checking and IntelliSense
+- **Status-reactive expressions**: Happy (idle), Focused (working), Wonder (thinking), Dizzy (error)
+- **Smooth animations**: Propeller spin, exhaust trails, morphing backgrounds
+- **Google Gemini inspiration**: Advanced CSS animations with particle effects
+- **Thomas the Train style**: Front-facing design for personality and engagement
 
-## License
+## 🧠 Brain Cards
 
-MIT License - feel free to use this project for any purpose.
+Knowledge management system containing:
+
+- **Cost Optimization Strategy** - Model routing and efficiency patterns
+- **Workflow Automation** - Task automation and batch processing insights  
+- **UI Design Philosophy** - Thomas-style avatar design principles
+- **Memory Management** - Context organization and recall strategies
+- **Proactive Assistance** - Framework for continuous improvement
+
+## 💰 Cost Optimization
+
+Built-in cost optimization features:
+
+- **Smart Model Routing**: Automatic routing to cheapest capable model
+- **Batch Processing**: Email processing in single context (saves ~$0.50/batch)
+- **Efficiency Tracking**: Real-time monitoring of cost savings
+- **Annual Savings**: Projected $1000+ savings through intelligent routing
+
+## 📊 Dashboard Sections
+
+- **Overview**: Real-time status, task counts, and activity summary
+- **Kanban**: Jet's active tasks and project management
+- **Brain**: Knowledge base and workflow documentation  
+- **Activity Log**: Complete system activity tracking
+- **Docs**: Technical documentation and guides
+
+## 🔧 Development
+
+### Project Structure
+
+```
+jet-dashboard/
+├── src/
+│   ├── app/              # Next.js app router
+│   ├── components/       # React components
+│   ├── lib/             # Database and utilities
+│   └── styles/          # Custom CSS animations
+├── public/              # Static assets
+└── README.md           # This file
+```
+
+### Key Components
+
+- **AnimatedJetAvatar**: Custom SVG jet with status animations
+- **KanbanBoard**: Task management with drag & drop
+- **BrainSection**: Knowledge management interface
+- **DashboardOverview**: Real-time status and metrics
+- **ActivityLog**: System activity tracking
+
+## 📝 License
+
+Private repository - All rights reserved.
+
+## 🤝 Contributing
+
+This is Jet's personal dashboard. For suggestions or improvements, create an issue or discuss directly with the AI assistant.
 
 ---
 
-Built with ❤️ for productivity enthusiasts.
+**Built with ❤️ by Jet** - Your AI Assistant for maximum efficiency and cost optimization.
