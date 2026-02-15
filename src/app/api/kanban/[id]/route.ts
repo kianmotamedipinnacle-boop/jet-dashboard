@@ -9,7 +9,7 @@ export async function PUT(
 ) {
   try {
     const body = await request.json();
-    const { title, description, tags, status, password } = body;
+    const { title, description, tags, status, priority, auto_pickup, password } = body;
     const { id: idParam } = await params;
     const id = parseInt(idParam);
 
@@ -29,11 +29,13 @@ export async function PUT(
           description = COALESCE(?, description),
           tags = COALESCE(?, tags),
           status = COALESCE(?, status),
+          priority = COALESCE(?, priority),
+          auto_pickup = COALESCE(?, auto_pickup),
           updated_date = ?
       WHERE id = ?
     `);
     
-    const result = stmt.run(title, description, tags, status, now, id);
+    const result = stmt.run(title, description, tags, status, priority, auto_pickup !== undefined ? (auto_pickup ? 1 : 0) : null, now, id);
     
     if (result.changes === 0) {
       return NextResponse.json({ error: 'Card not found' }, { status: 404 });

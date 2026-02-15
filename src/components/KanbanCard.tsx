@@ -1,7 +1,7 @@
 'use client';
 
 import { format } from 'date-fns';
-import { Calendar, Tag } from 'lucide-react';
+import { Calendar, Tag, Zap, AlertTriangle } from 'lucide-react';
 import { KanbanCard as KanbanCardType } from '@/lib/database';
 
 interface KanbanCardProps {
@@ -23,6 +23,24 @@ export function KanbanCard({ card, isDragging, onEdit }: KanbanCardProps) {
     done: 'bg-green-700 text-green-300',
   };
 
+  const priorityColors = {
+    low: 'text-gray-500',
+    medium: 'text-blue-500',
+    high: 'text-orange-500',
+    urgent: 'text-red-500'
+  };
+
+  const getPriorityIcon = (priority: string) => {
+    switch (priority) {
+      case 'urgent':
+        return <AlertTriangle className="h-3 w-3" />;
+      case 'high':
+        return <AlertTriangle className="h-3 w-3" />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div
       className={`bg-gray-800 rounded-lg p-4 mb-3 border border-gray-700 hover:border-gray-600 transition-colors cursor-pointer ${
@@ -31,9 +49,24 @@ export function KanbanCard({ card, isDragging, onEdit }: KanbanCardProps) {
       onClick={() => onEdit?.(card)}
     >
       <div className="flex items-start justify-between mb-2">
-        <h3 className="text-white font-medium text-sm line-clamp-2 flex-1">
-          {card.title}
-        </h3>
+        <div className="flex-1">
+          <div className="flex items-center space-x-2 mb-1">
+            <h3 className="text-white font-medium text-sm line-clamp-2 flex-1">
+              {card.title}
+            </h3>
+            {card.auto_pickup && (
+              <div className="flex items-center text-green-400" title="Auto-pickup enabled">
+                <Zap className="h-3 w-3" />
+              </div>
+            )}
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className={`flex items-center space-x-1 text-xs ${priorityColors[card.priority]}`}>
+              {getPriorityIcon(card.priority)}
+              <span className="capitalize">{card.priority}</span>
+            </div>
+          </div>
+        </div>
         <div className={`px-2 py-1 rounded text-xs font-medium ml-2 ${statusColors[card.status]}`}>
           {card.status.replace('_', ' ')}
         </div>

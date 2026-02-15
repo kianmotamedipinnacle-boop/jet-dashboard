@@ -19,6 +19,8 @@ export function CardModal({ type, card, onClose, onSave, onDelete }: CardModalPr
     content: '',
     tags: '',
     status: 'backlog' as KanbanCard['status'],
+    priority: 'medium' as KanbanCard['priority'],
+    auto_pickup: false,
     category: '',
   });
 
@@ -32,6 +34,8 @@ export function CardModal({ type, card, onClose, onSave, onDelete }: CardModalPr
         content: type === 'brain' ? (card as BrainCard).content || '' : '',
         tags: card.tags || '',
         status: type === 'kanban' ? (card as KanbanCard).status : 'backlog',
+        priority: type === 'kanban' ? (card as KanbanCard).priority || 'medium' : 'medium',
+        auto_pickup: type === 'kanban' ? (card as KanbanCard).auto_pickup || false : false,
         category: type === 'brain' ? (card as BrainCard).category || '' : '',
       });
     }
@@ -49,6 +53,8 @@ export function CardModal({ type, card, onClose, onSave, onDelete }: CardModalPr
             description: formData.description,
             tags: formData.tags,
             status: formData.status,
+            priority: formData.priority,
+            auto_pickup: formData.auto_pickup,
           }
         : {
             title: formData.title,
@@ -76,6 +82,13 @@ export function CardModal({ type, card, onClose, onSave, onDelete }: CardModalPr
     { value: 'in_progress', label: 'In Progress' },
     { value: 'review', label: 'Review' },
     { value: 'done', label: 'Done' },
+  ];
+
+  const priorityOptions = [
+    { value: 'low', label: 'Low' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'high', label: 'High' },
+    { value: 'urgent', label: 'Urgent' },
   ];
 
   const categoryOptions = [
@@ -161,6 +174,37 @@ export function CardModal({ type, card, onClose, onSave, onDelete }: CardModalPr
                     </option>
                   ))}
                 </select>
+              </div>
+
+              <div>
+                <label htmlFor="priority" className="block text-sm font-medium text-gray-300 mb-2">
+                  Priority
+                </label>
+                <select
+                  id="priority"
+                  value={formData.priority}
+                  onChange={(e) => setFormData({ ...formData, priority: e.target.value as KanbanCard['priority'] })}
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {priorityOptions.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex items-center">
+                <input
+                  id="auto_pickup"
+                  type="checkbox"
+                  checked={formData.auto_pickup}
+                  onChange={(e) => setFormData({ ...formData, auto_pickup: e.target.checked })}
+                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-gray-700"
+                />
+                <label htmlFor="auto_pickup" className="ml-2 block text-sm text-gray-300">
+                  Auto-pickup (Jet will automatically start working on this task)
+                </label>
               </div>
             </>
           ) : (
