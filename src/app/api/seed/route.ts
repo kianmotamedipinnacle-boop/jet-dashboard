@@ -155,7 +155,7 @@ export async function POST(request: NextRequest) {
         task.description,
         task.status,
         task.priority,
-        JSON.stringify(task.labels),
+        JSON.stringify(task.labels), // labels -> tags in database
         now,
         now
       );
