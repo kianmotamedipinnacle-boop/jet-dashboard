@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Navigation } from '@/components/Navigation';
+import { SideNavLayout } from '@/components/SideNavLayout';
 import { KanbanBoard } from '@/components/KanbanBoard';
 import { BrainSection } from '@/components/BrainSection';
 import { DashboardOverview } from '@/components/DashboardOverview';
@@ -90,48 +90,40 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900">
-      {/* Top Header with Jet Avatar & Status */}
-      <header className="bg-slate-800 border-b border-slate-700">
-        <div className="px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              {/* Custom Animated Jet Avatar */}
-              <div className="relative">
-                <AnimatedJetAvatar status={agentStatus} size={64} />
+    <SideNavLayout 
+      currentView={currentView} 
+      onViewChange={setCurrentView}
+      agentStatus={agentStatus}
+    >
+      
+      <div className="h-full overflow-y-auto">
+        {/* Status Header */}
+        <header className="bg-gray-800 border-b border-gray-700 sticky top-0 z-10">
+          <div className="px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
                 <StatusIndicator status={agentStatus} />
+                <div>
+                  <h2 className="text-lg font-semibold text-white">
+                    {currentView === 'dashboard' && 'Dashboard Overview'}
+                    {currentView === 'multi-chat' && 'Multi-Chat Interface'}
+                    {currentView === 'medicare' && 'Jet Productivity Dashboard'}
+                    {currentView === 'kanban' && "Jet's Task Board"}
+                    {currentView === 'brain' && 'Second Brain'}
+                    {currentView === 'log' && 'Activity Log'}
+                    {currentView === 'docs' && 'Documents'}
+                  </h2>
+                  <p className="text-sm text-gray-400">
+                    Last sync: {new Date().toLocaleTimeString()}
+                  </p>
+                </div>
               </div>
-              
-              <div>
-                <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                  Jet 
-                  <div className={`w-3 h-3 rounded-full ${
-                    agentStatus === 'idle' ? 'bg-green-500' : 
-                    agentStatus === 'working' ? 'bg-yellow-500 animate-pulse' :
-                    agentStatus === 'thinking' ? 'bg-blue-500 animate-bounce' :
-                    'bg-red-500'
-                  }`} />
-                </h1>
-                <p className="text-slate-400 text-sm capitalize">
-                  {agentStatus === 'idle' ? 'Ready for tasks' : 
-                   agentStatus === 'working' ? 'Processing...' :
-                   agentStatus === 'thinking' ? 'Analyzing...' :
-                   'Error occurred'}
-                </p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4 text-sm text-slate-400">
-              <span>Last sync: {new Date().toLocaleTimeString()}</span>
-              <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse" />
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <Navigation currentView={currentView} onViewChange={setCurrentView} />
-      
-      <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        {/* Main Content */}
+        <main className="p-6">
         {currentView === 'dashboard' && (
           <DashboardOverview 
             onNewNote={handleNewNote} 
@@ -169,7 +161,8 @@ export default function DashboardPage() {
         {currentView === 'docs' && (
           <DocsSection />
         )}
-      </main>
-    </div>
+        </main>
+      </div>
+    </SideNavLayout>
   );
 }
