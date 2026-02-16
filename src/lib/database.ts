@@ -30,7 +30,7 @@ const initDb = (): DatabaseSchema => ({
   }]
 });
 
-// Read database
+// Read database with migration
 const readDb = (): DatabaseSchema => {
   try {
     if (!fs.existsSync(dbPath)) {
@@ -39,7 +39,30 @@ const readDb = (): DatabaseSchema => {
       return newDb;
     }
     const data = fs.readFileSync(dbPath, 'utf8');
-    return JSON.parse(data) as DatabaseSchema;
+    const db = JSON.parse(data) as DatabaseSchema;
+    
+    // Migrate kanban cards to have order field
+    let needsMigration = false;
+    const statuses = ['backlog', 'in_progress', 'review', 'done'] as const;
+    
+    statuses.forEach(status => {
+      const cardsInStatus = db.kanban_cards
+        .filter(card => card.status === status)
+        .sort((a, b) => a.created_date - b.created_date);
+        
+      cardsInStatus.forEach((card, index) => {
+        if (card.order === undefined || card.order === null) {
+          card.order = index;
+          needsMigration = true;
+        }
+      });
+    });
+    
+    if (needsMigration) {
+      writeDb(db);
+    }
+    
+    return db;
   } catch (error) {
     console.error('Database read error:', error);
     return initDb();
@@ -84,9 +107,16 @@ class SimpleDB {
 
   addKanbanCard(card: Omit<KanbanCard, 'id'>): KanbanCard {
     const data = this.getData();
+    // Get the max order for the card's status column
+    const cardsInStatus = data.kanban_cards.filter(c => c.status === card.status);
+    const maxOrder = cardsInStatus.length > 0 
+      ? Math.max(...cardsInStatus.map(c => c.order || 0))
+      : -1;
+    
     const newCard: KanbanCard = {
       ...card,
-      id: Math.max(0, ...data.kanban_cards.map(c => c.id)) + 1
+      id: Math.max(0, ...data.kanban_cards.map(c => c.id)) + 1,
+      order: maxOrder + 1
     };
     data.kanban_cards.push(newCard);
     this.saveData();
@@ -284,6 +314,7 @@ export interface KanbanCard {
   status: 'backlog' | 'in_progress' | 'review' | 'done';
   priority: 'low' | 'medium' | 'high' | 'urgent';
   auto_pickup: boolean;
+  order: number;
   created_date: number;
   updated_date: number;
 }

@@ -7,21 +7,20 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const { id } = await params;
     const idNum = parseInt(id);
     const body = await request.json();
-    const { title, description, tags, status, priority, auto_pickup } = body;
+    const { title, description, tags, status, priority, auto_pickup, order } = body;
 
-    if (!title) {
-      return NextResponse.json({ error: 'Title is required' }, { status: 400 });
-    }
+    // Build update object with only provided fields
+    const updates: any = { updated_date: Date.now() };
+    
+    if (title !== undefined) updates.title = title;
+    if (description !== undefined) updates.description = description;
+    if (tags !== undefined) updates.tags = tags;
+    if (status !== undefined) updates.status = status;
+    if (priority !== undefined) updates.priority = priority;
+    if (auto_pickup !== undefined) updates.auto_pickup = auto_pickup;
+    if (order !== undefined) updates.order = order;
 
-    const updatedCard = db.updateKanbanCard(idNum, {
-      title,
-      description,
-      tags,
-      status,
-      priority,
-      auto_pickup,
-      updated_date: Date.now()
-    });
+    const updatedCard = db.updateKanbanCard(idNum, updates);
 
     if (!updatedCard) {
       return NextResponse.json({ error: 'Card not found' }, { status: 404 });

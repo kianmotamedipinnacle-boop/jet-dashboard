@@ -1,0 +1,27 @@
+{
+  "kanban_cards": [
+    {
+      "title": "Multi-Chat Dashboard Implementation - TONIGHT DELIVERY",
+      "description": "Build tabbed multi-chat interface by MORNING - Medicare, Tech, Strategy, General conversations with independent contexts. URGENT: Complete by 5AM",
+      "status": "in-progress",
+      "priority": "urgent",
+      "auto_pickup": false,
+      "order": 0,
+      "created_date": 1771200318339,
+      "updated_date": 1771200661027,
+      "id": 1
+    }
+  ],
+  "brain_cards": [],
+  "activity_log": [],
+  "docs": [],
+  "notes": [],
+  "status": [
+    {
+      "id": 1,
+      "status": "Idle",
+      "last_sync": 1771200318340,
+      "updated_at": 1771200318340
+    }
+  ]
+}

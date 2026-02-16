@@ -20,15 +20,13 @@ export async function GET(request: NextRequest) {
       cards = cards.filter(card => card.status === status);
     }
     
-    // Sort by priority and creation date
-    const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 };
+    // Sort by order field (order within columns is handled by frontend)
     cards.sort((a, b) => {
-      const aPriority = priorityOrder[a.priority] || 2;
-      const bPriority = priorityOrder[b.priority] || 2;
-      if (aPriority !== bPriority) {
-        return bPriority - aPriority; // Higher priority first
+      // Sort by order if they exist, otherwise by created_date
+      if (a.order !== undefined && b.order !== undefined) {
+        return a.order - b.order;
       }
-      return b.created_date - a.created_date; // Newer first
+      return a.created_date - b.created_date;
     });
     
     return NextResponse.json(cards);
@@ -61,6 +59,7 @@ export async function POST(request: NextRequest) {
       status: status || 'backlog',
       priority: priority || 'medium',
       auto_pickup: auto_pickup || false,
+      order: 0, // Will be calculated in db.addKanbanCard
       created_date: now,
       updated_date: now
     });

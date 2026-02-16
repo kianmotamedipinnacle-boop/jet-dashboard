@@ -1,0 +1,66 @@
+/* Smooth transitions for drag and drop */
+.kanban-card-transition {
+  transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Dragging state */
+.kanban-card-dragging {
+  opacity: 0.5;
+  cursor: grabbing !important;
+}
+
+/* Drop zone highlights */
+.kanban-drop-zone {
+  transition: all 200ms ease;
+}
+
+.kanban-drop-zone-active {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-color: rgb(59, 130, 246);
+}
+
+/* Drag handle */
+.drag-handle {
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.kanban-card:hover .drag-handle {
+  opacity: 1;
+}
+
+/* Card animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.kanban-card-enter {
+  animation: slideIn 300ms ease-out;
+}
+
+/* Smooth reordering */
+.sortable-ghost {
+  opacity: 0.4;
+}
+
+.sortable-drag {
+  opacity: 0.8 !important;
+  transform: rotate(2deg);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Column highlight on hover */
+.kanban-column {
+  transition: box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.kanban-column-highlight {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+}

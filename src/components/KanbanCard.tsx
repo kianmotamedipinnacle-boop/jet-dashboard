@@ -43,8 +43,8 @@ export function KanbanCard({ card, isDragging, onEdit }: KanbanCardProps) {
 
   return (
     <div
-      className={`bg-gray-800 rounded-lg p-4 mb-3 border border-gray-700 hover:border-gray-600 transition-colors cursor-pointer ${
-        isDragging ? 'opacity-50' : ''
+      className={`bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition-all duration-200 cursor-pointer hover:shadow-lg ${
+        isDragging ? 'shadow-2xl scale-105' : ''
       }`}
       onClick={() => onEdit?.(card)}
     >

@@ -10,12 +10,14 @@ import { DocsSection } from '@/components/DocsSection';
 import { StatusIndicator } from '@/components/StatusIndicator';
 import { AnimatedJetAvatar } from '@/components/AnimatedJetAvatar';
 import { JetProductivityDashboard } from '@/components/JetProductivityDashboard';
+import { PageTransition } from '@/components/PageTransition';
+import { MultiChatInterface } from '@/components/multi-chat';
 import { KanbanCard, BrainCard } from '@/lib/database';
 
 type AgentStatus = 'idle' | 'working' | 'thinking' | 'error';
 
 export default function DashboardPage() {
-  const [currentView, setCurrentView] = useState<'dashboard' | 'kanban' | 'brain' | 'log' | 'docs' | 'medicare'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'kanban' | 'brain' | 'log' | 'docs' | 'medicare' | 'multi-chat'>('dashboard');
   const [kanbanCards, setKanbanCards] = useState<KanbanCard[]>([]);
   const [brainCards, setBrainCards] = useState<BrainCard[]>([]);
   const [loading, setLoading] = useState(true);
@@ -140,6 +142,10 @@ export default function DashboardPage() {
         
         {currentView === 'medicare' && (
           <JetProductivityDashboard />
+        )}
+        
+        {currentView === 'multi-chat' && (
+          <MultiChatInterface />
         )}
         
         {currentView === 'kanban' && (

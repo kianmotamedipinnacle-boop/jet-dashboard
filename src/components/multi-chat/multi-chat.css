@@ -1,0 +1,408 @@
+/* Multi-Chat Interface Styles */
+
+/* ============================= */
+/* RESPONSIVE LAYOUT */
+/* ============================= */
+
+.multi-chat-container {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .multi-chat-container {
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile */
+  }
+  
+  /* Adjust chat window height on mobile */
+  .chat-window-mobile {
+    height: calc(100vh - 140px); /* Account for header + tabs + input */
+    height: calc(100dvh - 140px);
+  }
+  
+  /* Mobile message bubbles - smaller max width */
+  .message-bubble-mobile {
+    max-width: 85%;
+  }
+  
+  /* Mobile input area - fixed positioning */
+  .chat-input-mobile {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(17, 24, 39, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(75, 85, 99, 0.3);
+    padding: 12px;
+    z-index: 20;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .multi-chat-container {
+    height: calc(100vh - 60px); /* Account for potential navigation */
+  }
+  
+  .message-bubble-tablet {
+    max-width: 75%;
+  }
+}
+
+/* ============================= */
+/* CHAT MESSAGE ANIMATIONS */
+/* ============================= */
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes messageSlideInUser {
+  from {
+    opacity: 0;
+    transform: translateX(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes messageSlideInAssistant {
+  from {
+    opacity: 0;
+    transform: translateX(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.message-enter {
+  animation: messageSlideIn 0.3s ease-out forwards;
+}
+
+.message-enter-user {
+  animation: messageSlideInUser 0.3s ease-out forwards;
+}
+
+.message-enter-assistant {
+  animation: messageSlideInAssistant 0.3s ease-out forwards;
+}
+
+/* ============================= */
+/* TYPING INDICATORS */
+/* ============================= */
+
+@keyframes typingDots {
+  0%, 60%, 100% {
+    transform: initial;
+  }
+  30% {
+    transform: translateY(-10px);
+  }
+}
+
+.typing-dot {
+  animation: typingDots 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0s;
+}
+
+/* Enhanced typing indicator with wave effect */
+@keyframes typingWave {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.typing-wave {
+  animation: typingWave 1.5s infinite ease-in-out;
+}
+
+.typing-wave:nth-child(1) { animation-delay: 0s; }
+.typing-wave:nth-child(2) { animation-delay: 0.2s; }
+.typing-wave:nth-child(3) { animation-delay: 0.4s; }
+
+/* ============================= */
+/* TAB TRANSITIONS */
+/* ============================= */
+
+@keyframes tabSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tabSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.tab-content-enter {
+  animation: tabSlideIn 0.3s ease-out forwards;
+}
+
+.tab-content-exit {
+  animation: tabSlideOut 0.2s ease-in forwards;
+}
+
+/* ============================= */
+/* BADGE ANIMATIONS */
+/* ============================= */
+
+@keyframes badgeBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.badge-bounce {
+  animation: badgeBounce 0.6s ease-in-out;
+}
+
+.badge-pulse {
+  animation: badgePulse 2s infinite ease-in-out;
+}
+
+.badge-new {
+  animation: badgeBounce 0.6s ease-in-out, badgePulse 2s infinite ease-in-out 0.6s;
+}
+
+/* ============================= */
+/* SCROLL ENHANCEMENTS */
+/* ============================= */
+
+/* Custom scrollbar for chat messages */
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.8);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 1);
+}
+
+/* Smooth scroll behavior */
+.chat-messages {
+  scroll-behavior: smooth;
+}
+
+/* ============================= */
+/* FOCUS AND ACCESSIBILITY */
+/* ============================= */
+
+/* Focus styles for keyboard navigation */
+.chat-tab:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+.chat-input:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+.send-button:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .message-bubble {
+    border: 2px solid currentColor;
+  }
+  
+  .chat-tab {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .message-enter,
+  .message-enter-user,
+  .message-enter-assistant,
+  .tab-content-enter,
+  .tab-content-exit,
+  .badge-bounce,
+  .badge-pulse,
+  .typing-dot,
+  .typing-wave {
+    animation: none;
+  }
+  
+  * {
+    transition: none !important;
+  }
+}
+
+/* ============================= */
+/* LOADING STATES */
+/* ============================= */
+
+@keyframes chatLoading {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+.chat-loading {
+  animation: chatLoading 1.5s infinite ease-in-out;
+}
+
+/* Skeleton loading for messages */
+@keyframes skeletonPulse {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton-message {
+  background: linear-gradient(
+    90deg,
+    rgba(75, 85, 99, 0.3) 25%,
+    rgba(107, 114, 128, 0.5) 37%,
+    rgba(75, 85, 99, 0.3) 63%
+  );
+  background-size: 200px 100%;
+  animation: skeletonPulse 1.5s infinite ease-in-out;
+}
+
+/* ============================= */
+/* UTILITY CLASSES */
+/* ============================= */
+
+.chat-gradient-medicare {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+.chat-gradient-tech {
+  background: linear-gradient(135deg, #3B82F6 0%, #0EA5E9 100%);
+}
+
+.chat-gradient-strategy {
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+}
+
+.chat-gradient-general {
+  background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%);
+}
+
+/* Glass morphism effects */
+.glass-effect {
+  background: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-effect-light {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ============================= */
+/* MOBILE-SPECIFIC OPTIMIZATIONS */
+/* ============================= */
+
+@media (max-width: 640px) {
+  /* Larger touch targets */
+  .mobile-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better spacing for mobile */
+  .mobile-spacing {
+    padding: 16px;
+  }
+  
+  /* Mobile-optimized text sizes */
+  .mobile-text-lg {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  
+  .mobile-text-base {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  
+  .mobile-text-sm {
+    font-size: 14px;
+    line-height: 1.3;
+  }
+}

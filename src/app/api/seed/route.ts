@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     ];
 
     // Add kanban cards
-    kanbanCards.forEach(card => db.addKanbanCard(card));
+    kanbanCards.forEach((card, index) => db.addKanbanCard({ ...card, order: index }));
 
     // Seed Brain cards with Jet's knowledge and strategies
     const brainCards = [

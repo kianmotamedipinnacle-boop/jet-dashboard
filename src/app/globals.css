@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Multi-Chat styles are included below */
+
 @layer base {
   body {
     @apply bg-gray-900 text-white;
@@ -47,191 +49,867 @@
   transition: color 0.2s, background-color 0.2s, border-color 0.2s;
 }
 
-/* Custom Jet Avatar Animations */
-.jet-avatar {
-  position: relative;
-  display: inline-block;
-  animation: jetFloat 3s ease-in-out infinite;
-}
+/* ============================= */
+/* KLAUS-STYLE AVATAR ANIMATIONS */
+/* ============================= */
 
-.jet-avatar svg {
-  transition: transform 0.3s ease;
-}
-
-.jet-avatar.working svg {
-  animation: jetSpeedUp 1s ease-in-out infinite;
-}
-
-.jet-avatar.thinking svg {
-  animation: jetThinking 2s ease-in-out infinite;
-}
-
-.jet-avatar.error svg {
-  animation: jetError 0.5s ease-in-out 3;
-}
-
-@keyframes jetFloat {
+/* Base morphing animation for thinking state */
+@keyframes klausMorph {
   0%, 100% {
-    transform: translateY(0px);
+    border-radius: 50%;
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    border-radius: 45% 55% 52% 48%;
+    transform: scale(1.08) rotate(90deg);
   }
   50% {
-    transform: translateY(-10px);
+    border-radius: 48% 52% 55% 45%;
+    transform: scale(1.05) rotate(180deg);
+  }
+  75% {
+    border-radius: 52% 48% 45% 55%;
+    transform: scale(1.08) rotate(270deg);
   }
 }
 
-@keyframes jetSpeedUp {
+.klaus-morph {
+  animation: klausMorph 8s ease-in-out infinite;
+}
+
+/* Pulsing ring effect */
+@keyframes klausPulseRing {
   0% {
-    transform: translateX(0px) scale(1);
+    transform: scale(1);
+    opacity: 0.6;
   }
   50% {
-    transform: translateX(5px) scale(1.05);
+    transform: scale(1.15);
+    opacity: 0.3;
   }
   100% {
-    transform: translateX(0px) scale(1);
+    transform: scale(1.3);
+    opacity: 0;
   }
 }
 
-@keyframes jetThinking {
-  0%, 100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(-2deg);
-  }
-  75% {
-    transform: rotate(2deg);
-  }
+.klaus-pulse-ring {
+  animation: klausPulseRing 2s ease-out infinite;
 }
 
-@keyframes jetError {
-  0%, 100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(-10deg);
-  }
-  75% {
-    transform: rotate(10deg);
-  }
-}
-
-/* Propeller animation */
-.propeller {
-  transform-origin: center;
-  animation: propellerSpin 0.1s linear infinite;
-}
-
-.working .propeller {
-  animation-duration: 0.05s;
-}
-
-@keyframes propellerSpin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Exhaust trail */
-.exhaust {
-  opacity: 0.7;
-  animation: exhaustFlow 2s ease-in-out infinite;
-}
-
-.working .exhaust {
-  animation-duration: 0.5s;
-  opacity: 1;
-}
-
-@keyframes exhaustFlow {
-  0%, 100% {
-    transform: scaleX(1);
-    opacity: 0.7;
+/* Energy wave animation */
+@keyframes klausEnergyWave {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
   }
   50% {
-    transform: scaleX(1.2);
+    transform: scale(1.2);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.klaus-energy-wave {
+  animation: klausEnergyWave 3s ease-out infinite;
+}
+
+/* Main body animations for different states */
+.klaus-idle {
+  animation: klausFloat 4s ease-in-out infinite;
+}
+
+.klaus-working {
+  animation: klausWorkingPulse 1s ease-in-out infinite;
+}
+
+.klaus-thinking {
+  animation: klausThinking 3s ease-in-out infinite;
+}
+
+.klaus-error {
+  animation: klausError 0.3s ease-in-out 5;
+}
+
+.klaus-listening {
+  animation: klausListening 2s ease-in-out infinite;
+}
+
+.klaus-speaking {
+  animation: klausSpeaking 0.8s ease-in-out infinite;
+}
+
+@keyframes klausFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-5px) scale(1.02);
+  }
+}
+
+@keyframes klausWorkingPulse {
+  0%, 100% {
+    transform: translateX(0) scale(1);
+  }
+  25% {
+    transform: translateX(2px) scale(1.05);
+  }
+  50% {
+    transform: translateX(-1px) scale(1.03);
+  }
+  75% {
+    transform: translateX(1px) scale(1.05);
+  }
+}
+
+@keyframes klausThinking {
+  0%, 100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  25% {
+    transform: rotate(-3deg) translateY(-3px);
+  }
+  50% {
+    transform: rotate(0deg) translateY(-5px);
+  }
+  75% {
+    transform: rotate(3deg) translateY(-3px);
+  }
+}
+
+@keyframes klausError {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  20% {
+    transform: translateX(-5px) rotate(-5deg);
+  }
+  40% {
+    transform: translateX(5px) rotate(5deg);
+  }
+  60% {
+    transform: translateX(-3px) rotate(-3deg);
+  }
+  80% {
+    transform: translateX(3px) rotate(3deg);
+  }
+}
+
+@keyframes klausListening {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.08) translateY(-2px);
+  }
+}
+
+@keyframes klausSpeaking {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.1) translateY(-1px);
+  }
+}
+
+/* Propeller animations */
+.klaus-propeller-idle {
+  animation: klausPropellerSlow 3s linear infinite;
+}
+
+.klaus-propeller-turbo {
+  animation: klausPropellerFast 0.08s linear infinite;
+}
+
+@keyframes klausPropellerSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes klausPropellerFast {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Wing flapping animation */
+@keyframes klausWingFlap {
+  0%, 100% {
+    transform: scaleY(1) translateY(0);
+  }
+  50% {
+    transform: scaleY(0.8) translateY(2px);
+  }
+}
+
+.klaus-wing-flap {
+  animation: klausWingFlap 0.5s ease-in-out infinite;
+}
+
+/* Enhanced exhaust trail */
+@keyframes klausExhaustFlow {
+  0% {
+    transform: scaleY(1) translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scaleY(1.5) translateY(5px);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scaleY(2) translateY(10px);
+    opacity: 0;
+  }
+}
+
+.klaus-exhaust-trail {
+  animation: klausExhaustFlow 1.5s ease-out infinite;
+}
+
+/* Core animations */
+@keyframes klausCorePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.7;
+  }
+}
+
+@keyframes klausCoreSpin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.2);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+.klaus-core-pulse {
+  animation: klausCorePulse 0.8s ease-in-out infinite;
+}
+
+.klaus-core-spin {
+  animation: klausCoreSpin 2s linear infinite;
+}
+
+/* Particle animations */
+@keyframes klausParticlePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.5);
     opacity: 0.4;
   }
 }
 
-/* Gemini-inspired glow effect */
-.gemini-glow {
-  position: relative;
+.klaus-particle {
+  animation: klausParticlePulse 2s ease-in-out infinite;
 }
 
-.gemini-glow::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, #4285f4, #34a853, #fbbc04, #ea4335);
-  border-radius: 50%;
-  opacity: 0;
-  animation: geminiPulse 4s ease-in-out infinite;
-  z-index: -1;
-}
-
-@keyframes geminiPulse {
-  0%, 100% {
+/* Listening/Speaking wave animations */
+@keyframes klausListeningWaves {
+  0% {
+    transform: scale(1);
     opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes klausSpeakingWaves {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+.klaus-listening-waves {
+  animation: klausListeningWaves 2s ease-out infinite;
+}
+
+.klaus-speaking-waves {
+  animation: klausSpeakingWaves 1s ease-out infinite;
+}
+
+/* Fade in animation for activity text */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Status-specific glow effects */
+.jet-status-glow {
+  animation: statusGlow 2s ease-in-out infinite;
+}
+
+@keyframes statusGlow {
+  0%, 100% {
+    filter: blur(8px);
     transform: scale(1);
   }
   50% {
-    opacity: 0.3;
+    filter: blur(12px);
+    transform: scale(1.1);
+  }
+}
+
+/* Gemini-inspired morphing effect */
+.jet-gemini-morph {
+  animation: geminiMorph 6s ease-in-out infinite;
+}
+
+@keyframes geminiMorph {
+  0%, 100% {
+    border-radius: 50%;
+    transform: rotate(0deg);
+  }
+  33% {
+    border-radius: 40% 60% 60% 40%;
+    transform: rotate(120deg);
+  }
+  66% {
+    border-radius: 60% 40% 40% 60%;
+    transform: rotate(240deg);
+  }
+}
+
+/* Additional utility animations */
+.jet-working-pulse {
+  animation: workingPulse 1s ease-in-out infinite;
+}
+
+@keyframes workingPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
     transform: scale(1.05);
   }
 }
 
-/* Status-based eye expressions */
-.eyes.idle {
-  animation: blink 6s infinite;
+.jet-error-shake {
+  animation: errorShake 0.5s ease-in-out;
 }
 
-.eyes.working {
-  animation: none;
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-2px); }
+  20% { transform: translateX(2px); }
+  30% { transform: translateX(-2px); }
+  40% { transform: translateX(2px); }
+  50% { transform: translateX(-1px); }
+  60% { transform: translateX(1px); }
+  70% { transform: translateX(-1px); }
+  80% { transform: translateX(1px); }
+  90% { transform: translateX(0); }
 }
 
-.eyes.thinking circle:first-child {
-  animation: eyeMove 2s ease-in-out infinite;
+/* Jet exhaust animation */
+.jet-exhaust {
+  animation: exhaustFlow 1.5s ease-in-out infinite;
 }
 
-.eyes.error {
-  animation: shake 0.5s ease-in-out 3;
-}
-
-@keyframes blink {
-  0%, 90%, 100% {
+@keyframes exhaustFlow {
+  0% {
+    opacity: 0.8;
     transform: scaleY(1);
   }
-  95% {
-    transform: scaleY(0.1);
+  50% {
+    opacity: 0.4;
+    transform: scaleY(1.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleY(1.6) translateY(5px);
   }
 }
 
-@keyframes eyeMove {
+/* Propeller spinning */
+.jet-propeller-working {
+  animation: propellerFast 0.05s linear infinite;
+}
+
+@keyframes propellerFast {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Thinking particles */
+.jet-thinking-particles {
+  animation: thinkingParticles 4s ease-in-out infinite;
+}
+
+@keyframes thinkingParticles {
   0%, 100% {
-    transform: translateX(0);
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
   }
-  25% {
-    transform: translateX(-1px);
+  20% {
+    transform: translate(-10px, -20px) scale(1.2);
+    opacity: 0.7;
   }
-  75% {
-    transform: translateX(1px);
+  40% {
+    transform: translate(10px, -40px) scale(0.8);
+    opacity: 0.5;
+  }
+  60% {
+    transform: translate(-5px, -60px) scale(0.6);
+    opacity: 0.3;
+  }
+  80% {
+    transform: translate(5px, -80px) scale(0.4);
+    opacity: 0.1;
   }
 }
 
-@keyframes shake {
+/* Transform origin utilities */
+.origin-center {
+  transform-origin: center;
+}
+
+/* Multi-Chat Component Styles */
+
+/* Multi-Chat Interface Styles */
+
+/* ============================= */
+/* RESPONSIVE LAYOUT */
+/* ============================= */
+
+.multi-chat-container {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .multi-chat-container {
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile */
+  }
+  
+  /* Adjust chat window height on mobile */
+  .chat-window-mobile {
+    height: calc(100vh - 140px); /* Account for header + tabs + input */
+    height: calc(100dvh - 140px);
+  }
+  
+  /* Mobile message bubbles - smaller max width */
+  .message-bubble-mobile {
+    max-width: 85%;
+  }
+  
+  /* Mobile input area - fixed positioning */
+  .chat-input-mobile {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(17, 24, 39, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(75, 85, 99, 0.3);
+    padding: 12px;
+    z-index: 20;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .multi-chat-container {
+    height: calc(100vh - 60px); /* Account for potential navigation */
+  }
+  
+  .message-bubble-tablet {
+    max-width: 75%;
+  }
+}
+
+/* ============================= */
+/* CHAT MESSAGE ANIMATIONS */
+/* ============================= */
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes messageSlideInUser {
+  from {
+    opacity: 0;
+    transform: translateX(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes messageSlideInAssistant {
+  from {
+    opacity: 0;
+    transform: translateX(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.message-enter {
+  animation: messageSlideIn 0.3s ease-out forwards;
+}
+
+.message-enter-user {
+  animation: messageSlideInUser 0.3s ease-out forwards;
+}
+
+.message-enter-assistant {
+  animation: messageSlideInAssistant 0.3s ease-out forwards;
+}
+
+/* ============================= */
+/* TYPING INDICATORS */
+/* ============================= */
+
+@keyframes typingDots {
+  0%, 60%, 100% {
+    transform: initial;
+  }
+  30% {
+    transform: translateY(-10px);
+  }
+}
+
+.typing-dot {
+  animation: typingDots 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0s;
+}
+
+/* Enhanced typing indicator with wave effect */
+@keyframes typingWave {
   0%, 100% {
-    transform: translateX(0);
+    opacity: 0.4;
+    transform: scale(0.8);
   }
-  25% {
-    transform: translateX(-2px);
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
   }
-  75% {
-    transform: translateX(2px);
+}
+
+.typing-wave {
+  animation: typingWave 1.5s infinite ease-in-out;
+}
+
+.typing-wave:nth-child(1) { animation-delay: 0s; }
+.typing-wave:nth-child(2) { animation-delay: 0.2s; }
+.typing-wave:nth-child(3) { animation-delay: 0.4s; }
+
+/* ============================= */
+/* TAB TRANSITIONS */
+/* ============================= */
+
+@keyframes tabSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tabSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.tab-content-enter {
+  animation: tabSlideIn 0.3s ease-out forwards;
+}
+
+.tab-content-exit {
+  animation: tabSlideOut 0.2s ease-in forwards;
+}
+
+/* ============================= */
+/* BADGE ANIMATIONS */
+/* ============================= */
+
+@keyframes badgeBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.badge-bounce {
+  animation: badgeBounce 0.6s ease-in-out;
+}
+
+.badge-pulse {
+  animation: badgePulse 2s infinite ease-in-out;
+}
+
+.badge-new {
+  animation: badgeBounce 0.6s ease-in-out, badgePulse 2s infinite ease-in-out 0.6s;
+}
+
+/* ============================= */
+/* SCROLL ENHANCEMENTS */
+/* ============================= */
+
+/* Custom scrollbar for chat messages */
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.8);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 1);
+}
+
+/* Smooth scroll behavior */
+.chat-messages {
+  scroll-behavior: smooth;
+}
+
+/* ============================= */
+/* FOCUS AND ACCESSIBILITY */
+/* ============================= */
+
+/* Focus styles for keyboard navigation */
+.chat-tab:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+.chat-input:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+.send-button:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .message-bubble {
+    border: 2px solid currentColor;
+  }
+  
+  .chat-tab {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .message-enter,
+  .message-enter-user,
+  .message-enter-assistant,
+  .tab-content-enter,
+  .tab-content-exit,
+  .badge-bounce,
+  .badge-pulse,
+  .typing-dot,
+  .typing-wave {
+    animation: none;
+  }
+  
+  * {
+    transition: none !important;
+  }
+}
+
+/* ============================= */
+/* LOADING STATES */
+/* ============================= */
+
+@keyframes chatLoading {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+.chat-loading {
+  animation: chatLoading 1.5s infinite ease-in-out;
+}
+
+/* Skeleton loading for messages */
+@keyframes skeletonPulse {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton-message {
+  background: linear-gradient(
+    90deg,
+    rgba(75, 85, 99, 0.3) 25%,
+    rgba(107, 114, 128, 0.5) 37%,
+    rgba(75, 85, 99, 0.3) 63%
+  );
+  background-size: 200px 100%;
+  animation: skeletonPulse 1.5s infinite ease-in-out;
+}
+
+/* ============================= */
+/* UTILITY CLASSES */
+/* ============================= */
+
+.chat-gradient-medicare {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+.chat-gradient-tech {
+  background: linear-gradient(135deg, #3B82F6 0%, #0EA5E9 100%);
+}
+
+.chat-gradient-strategy {
+  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+}
+
+.chat-gradient-general {
+  background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%);
+}
+
+/* Glass morphism effects */
+.glass-effect {
+  background: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-effect-light {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ============================= */
+/* MOBILE-SPECIFIC OPTIMIZATIONS */
+/* ============================= */
+
+@media (max-width: 640px) {
+  /* Larger touch targets */
+  .mobile-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better spacing for mobile */
+  .mobile-spacing {
+    padding: 16px;
+  }
+  
+  /* Mobile-optimized text sizes */
+  .mobile-text-lg {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  
+  .mobile-text-base {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  
+  .mobile-text-sm {
+    font-size: 14px;
+    line-height: 1.3;
   }
 }
