@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 
 interface ActivityIndicatorProps {
-  chatType: 'Medicare' | 'Tech' | 'Strategy' | 'General';
+  chatType: string;
   unreadCount: number;
   isTyping?: boolean;
   isActive?: boolean;
@@ -29,52 +29,30 @@ export function ActivityIndicator({
   }, [unreadCount]);
 
   const getIconAndColors = () => {
-    switch (chatType) {
-      case 'Medicare':
-        return {
-          icon: (
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-            </svg>
-          ),
-          colors: 'from-green-500 to-emerald-500',
-          textColor: 'text-green-400',
-          bgColor: 'bg-green-500'
-        };
-      case 'Tech':
-        return {
-          icon: (
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
-          ),
-          colors: 'from-blue-500 to-cyan-500',
-          textColor: 'text-blue-400',
-          bgColor: 'bg-blue-500'
-        };
-      case 'Strategy':
-        return {
-          icon: (
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 0l-2 2a1 1 0 001.414 1.414L8 10.414l1.293 1.293a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-          ),
-          colors: 'from-purple-500 to-violet-500',
-          textColor: 'text-purple-400',
-          bgColor: 'bg-purple-500'
-        };
-      case 'General':
-        return {
-          icon: (
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
-            </svg>
-          ),
-          colors: 'from-gray-500 to-slate-500',
-          textColor: 'text-gray-400',
-          bgColor: 'bg-gray-500'
-        };
-    }
+    // Generate consistent colors based on the chat name
+    const colorSchemes = [
+      { colors: 'from-green-500 to-emerald-500', textColor: 'text-green-400', bgColor: 'bg-green-500' },
+      { colors: 'from-blue-500 to-cyan-500', textColor: 'text-blue-400', bgColor: 'bg-blue-500' },
+      { colors: 'from-purple-500 to-violet-500', textColor: 'text-purple-400', bgColor: 'bg-purple-500' },
+      { colors: 'from-orange-500 to-amber-500', textColor: 'text-orange-400', bgColor: 'bg-orange-500' },
+      { colors: 'from-pink-500 to-rose-500', textColor: 'text-pink-400', bgColor: 'bg-pink-500' },
+      { colors: 'from-indigo-500 to-blue-500', textColor: 'text-indigo-400', bgColor: 'bg-indigo-500' },
+      { colors: 'from-teal-500 to-cyan-500', textColor: 'text-teal-400', bgColor: 'bg-teal-500' },
+      { colors: 'from-gray-500 to-slate-500', textColor: 'text-gray-400', bgColor: 'bg-gray-500' },
+    ];
+    
+    // Use chat name to determine color index
+    const colorIndex = chatType.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colorSchemes.length;
+    const colorScheme = colorSchemes[colorIndex];
+    
+    return {
+      icon: (
+        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+        </svg>
+      ),
+      ...colorScheme
+    };
   };
 
   const getLastActivityText = () => {

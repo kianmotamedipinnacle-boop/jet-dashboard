@@ -1,4 +1,5 @@
 export { MultiChatInterface } from './MultiChatInterface';
+export { DynamicMultiChatInterface } from './DynamicMultiChatInterface';
 export { ChatTabs } from './ChatTabs';
 export { ChatWindow } from './ChatWindow';
 export { ChatMessage } from './ChatMessage';

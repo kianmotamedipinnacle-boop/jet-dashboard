@@ -12,7 +12,7 @@ export interface Message {
 }
 
 interface ChatWindowProps {
-  chatType: 'Medicare' | 'Tech' | 'Strategy' | 'General';
+  chatType: string;
   messages: Message[];
   onSendMessage: (message: string) => void;
   isActive: boolean;

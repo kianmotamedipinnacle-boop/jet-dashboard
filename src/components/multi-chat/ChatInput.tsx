@@ -6,7 +6,7 @@ interface ChatInputProps {
   onSendMessage: (message: string) => void;
   disabled?: boolean;
   placeholder?: string;
-  chatType: 'Medicare' | 'Tech' | 'Strategy' | 'General';
+  chatType: string;
 }
 
 export function ChatInput({ onSendMessage, disabled = false, placeholder, chatType }: ChatInputProps) {
