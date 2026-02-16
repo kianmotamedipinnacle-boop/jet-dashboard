@@ -11,7 +11,7 @@ import { StatusIndicator } from '@/components/StatusIndicator';
 import { AnimatedJetAvatar } from '@/components/AnimatedJetAvatar';
 import { JetProductivityDashboard } from '@/components/JetProductivityDashboard';
 import { PageTransition } from '@/components/PageTransition';
-import { MultiChatInterface } from '@/components/multi-chat';
+import { DynamicMultiChatInterface } from '@/components/multi-chat';
 import { KanbanCard, BrainCard } from '@/lib/database';
 
 type AgentStatus = 'idle' | 'working' | 'thinking' | 'error';
@@ -137,7 +137,7 @@ export default function DashboardPage() {
         )}
         
         {currentView === 'multi-chat' && (
-          <MultiChatInterface />
+          <DynamicMultiChatInterface />
         )}
         
         {currentView === 'kanban' && (
